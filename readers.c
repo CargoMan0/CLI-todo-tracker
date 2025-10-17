@@ -25,3 +25,25 @@ int read_number(int *number_ptr) {
 
     return 0;
 }
+
+int read_task_name(char *task_name) {
+    int bytes_read;
+
+    if (task_name == NULL) {
+        fprintf(stderr, "task_name is NULL\n");
+        return -1;
+    }
+
+    bytes_read = scanf("%49s", task_name);
+    if (bytes_read != 1) {
+        fprintf(stderr, "Invalid task_name input\n");
+
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {
+        }
+
+        return -1;
+    }
+
+    return 0;
+}
