@@ -52,6 +52,33 @@ int add_task(struct Task **tasks, int *count) {
     return 0;
 }
 
+int delete_task(struct Task **tasks, int *count, const int id) {
+    if (*tasks == NULL) {
+        fprintf(stderr, "Critical bug: Tasks array is NULL\n");
+        return -1;
+    }
+
+    if (id > *count) {
+        fprintf(stderr, "Task with id: %d does not exist\n", id);
+        return -2;
+    }
+
+    for (int i = id - 1; i < *count - 1; i++) {
+        (*tasks)[i] = (*tasks)[i + 1];
+    }
+
+    struct Task *tmp = realloc(*tasks, sizeof(struct Task) * (*count - 1));
+    if (tmp == NULL) {
+        fprintf(stderr, "realloc() failed. Tasks is NULL\n");
+        return -1;
+    }
+
+    *tasks = tmp;
+    (*count)--;
+
+    return 0;
+}
+
 int get_tasks(struct Task *tasks, const int count) {
     char *is_done_bool;
 
@@ -87,8 +114,8 @@ int mark_task_done(struct Task **tasks, const int count, const int id) {
         return -1;
     }
 
-    if (id == 0 || id > count) {
-        fprintf(stderr, "Tasks with id: %d does not exist\n", id);
+    if (id > count) {
+        fprintf(stderr, "Task with id: %d does not exist\n", id);
         return -2;
     }
 

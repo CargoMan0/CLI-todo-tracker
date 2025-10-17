@@ -29,7 +29,10 @@ int main(void) {
                 add_task(&tasks, &count);
                 break;
             case 2:
-                printf("Delete Tasks\n");
+                printf("Enter Task ID: \n");
+                read_number(&task_id);
+
+                delete_task(&tasks, &count, task_id);
                 break;
             case 3:
                 get_tasks(tasks, count);
