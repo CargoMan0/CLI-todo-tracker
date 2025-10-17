@@ -15,7 +15,7 @@ struct Task {
 // Task functions.
 int add_task(struct Task **tasks, int *count);
 
-int get_tasks(struct Task *tasks, int *count);
+int get_tasks(struct Task *tasks, int count);
 
 int delete_tasks(struct Task **tasks, int count);
 
