@@ -7,4 +7,6 @@
 
 int read_number(int *number_ptr);
 
+int read_task_name(char *task_name);
+
 #endif //CLI_TODO_TRACKER_READER_H
