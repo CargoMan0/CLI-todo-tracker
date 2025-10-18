@@ -22,8 +22,8 @@ int delete_task(struct Task **tasks, int *count, int id);
 int mark_task_done(struct Task **tasks, int count, int id);
 
 // Files interaction.
-int save_tasks_to_file(const char *filename, struct Task *tasks, int count);
+int save_tasks_to_file(struct Task *tasks, int count);
 
-int read_tasks_from_file(const char *filename);
+int read_tasks_from_file(const char *filename, struct Task **tasks, int *count);
 
 #endif //CLI_TODO_TRACKER_TASKS_H

@@ -129,3 +129,70 @@ int mark_task_done(struct Task **tasks, const int count, const int id) {
     printf("Task[%d] is now marked as Done\n", id);
     return 0;
 }
+
+int save_tasks_to_file(struct Task *tasks, const int count) {
+    int err_code;
+    FILE *file = fopen("tasks.txt", "w");
+
+    if (file == NULL) {
+        fprintf(stderr, "Critical bug: Could not open file %s\n", "tasks.txt");
+        return -1;
+    }
+
+    char *is_done_bool;
+    for (int i = 0; i < count; i++) {
+        if (tasks[i].isDone) {
+            is_done_bool = "true";
+        } else {
+            is_done_bool = "false";
+        }
+        fprintf(file,
+                "%d.\n"
+                "Name: %s\n"
+                "Priority: %d\n"
+                "Done: %s\n",
+                i + 1, tasks[i].name, tasks[i].priority, is_done_bool
+        );
+    }
+
+    err_code = fclose(file);
+    if (err_code != 0) {
+        fprintf(stderr, "Could not close file %s\n", "tasks.txt");
+        return -1;
+    }
+
+    return 0;
+}
+
+
+int read_tasks_from_file(const char *filename, struct Task **tasks, int *count) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        fprintf(stderr, "Error: Could not open %s\n", filename);
+        return -1;
+    }
+
+    struct Task tmp;
+    char done_str[8];
+
+    while (fscanf(file,
+                  "%*d.\nName: %[^\n]\nPriority: %d\nDone: %7s\n",
+                  tmp.name, &tmp.priority, done_str) == 3) {
+
+        struct Task *new_tasks = realloc(*tasks, sizeof(struct Task) * (*count + 1));
+        if (!new_tasks) {
+            fprintf(stderr, "Memory allocation error\n");
+            free(*tasks);
+            fclose(file);
+            return -1;
+        }
+
+        *tasks = new_tasks;
+        tmp.isDone = (strcmp(done_str, "true") == 0);
+        (*tasks)[*count] = tmp;
+        (*count)++;
+                  }
+
+    fclose(file);
+    return 0;
+}

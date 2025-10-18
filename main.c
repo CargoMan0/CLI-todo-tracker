@@ -43,6 +43,15 @@ int main(void) {
 
                 mark_task_done(&tasks, count, task_id);
                 break;
+            case 5:
+                printf("Saving your tasks to file...\n");
+                save_tasks_to_file(tasks, count);
+                break;
+            case 6:
+                printf("Loading tasks from file... \n");
+
+                read_tasks_from_file("tasks.txt", &tasks, &count);
+                break;
             default:
                 printf("Wrong input. Please try again.\n");
                 abort();
