@@ -10,42 +10,39 @@
 #include <string.h>
 
 int add_task(struct Task **tasks, int *count) {
-    int err_code, priority;
-    char name[50];
-
-    if (*tasks == NULL) {
-        fprintf(stderr, "Critical bug: Tasks array is NULL\n");
+    if (tasks == NULL || count == NULL) {
         return -1;
     }
 
+    int err_code, priority;
+    char name[50];
+
     struct Task *tmp = realloc(*tasks, sizeof(struct Task) * (*count + 1));
     if (tmp == NULL) {
-        fprintf(stderr, "realloc() failed. Tasks is NULL\n");
+        fprintf(stderr, "memory reallocation failed.\n");
         return -1;
     }
     *tasks = tmp;
 
-    printf("Enter Task Name: ");
+    printf("Enter Task Name (Not longer than %zu symbols): ", sizeof((*tasks)[*count].name) - 1);
     err_code = read_task_name(name);
-    if (err_code != 0) {
-        return err_code;
-    }
+    if (err_code != 0) return err_code;
 
     printf("Enter Task Priority (0–3): ");
     err_code = read_number(&priority);
-    if (err_code != 0) {
-        return err_code;
-    }
+    if (err_code != 0) return err_code;
+
 
     if (priority < 0 || priority > 3) {
-        fprintf(stderr, "Priority must be between 0 and 3\n");
+        fprintf(stderr, "priority must be between 0 and 3\n");
         return -1;
     }
 
-    strncpy((*tasks)[*count].name, name, sizeof((*tasks)[*count].name));
-    (*tasks)[*count].name[sizeof((*tasks)[*count].name) - 1] = '\0';
-    (*tasks)[*count].priority = priority;
-    (*tasks)[*count].isDone = 0;
+    struct Task *task = &(*tasks)[*count];
+    task->isDone = 0;
+    task->priority = priority;
+    strncpy(task->name, name, sizeof(task->name) - 1);
+    task->name[sizeof(task->name) - 1] = '\0';
 
     (*count)++;
 
