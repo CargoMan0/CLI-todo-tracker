@@ -17,6 +17,7 @@ int main(void) {
             "2. Delete Task\n"
             "3. Get your Tasks\n"
             "4. Mark task as done\n"
+            "5. Mark task as undone\n"
         );
         err_code = read_number(&choice);
         if (err_code != 0) {
@@ -41,7 +42,13 @@ int main(void) {
                 printf("Enter Task ID: \n");
                 read_number(&task_id);
 
-                mark_task_done(&tasks, count, task_id);
+                mark_task_done(tasks, count, task_id);
+                break;
+            case 5:
+                printf("Enter Task ID: \n");
+                read_number(&task_id);
+
+                mark_task_undone(tasks, count, task_id);
                 break;
             case 5:
                 printf("Saving your tasks to file...\n");
