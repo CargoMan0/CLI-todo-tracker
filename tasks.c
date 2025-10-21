@@ -100,24 +100,48 @@ int get_tasks(struct Task *tasks, const int count) {
     return 0;
 }
 
-int mark_task_done(struct Task **tasks, const int count, const int id) {
-    if (*tasks == NULL) {
-        fprintf(stderr, "Critical bug: Tasks array is NULL\n");
+int mark_task_done(struct Task *tasks, const int count, const int id) {
+    if (tasks == NULL) {
         return -1;
     }
 
-    if (id > count) {
-        fprintf(stderr, "Task with id: %d does not exist\n", id);
+    if (id <= 0 || id > count) {
+        fprintf(stderr, "task with id %d does not exist.\n", id);
         return -2;
     }
 
-    if ((*tasks)[id].isDone) {
-        printf("Task[%d] is already marked as Done\n", id);
+    struct Task *task = &tasks[id - 1];
+
+    if (task->isDone) {
+        printf("Task[%d] is already marked as Done.\n", id);
         return 0;
     }
 
-    (*tasks)[id - 1].isDone = 1;
+    task->isDone = 1;
+    printf("Task[%d] is now marked as Done.\n", id);
 
-    printf("Task[%d] is now marked as Done\n", id);
+    return 0;
+}
+
+int mark_task_undone(struct Task *tasks, const int count, const int id) {
+    if (tasks == NULL) {
+        return -1;
+    }
+
+    if (id <= 0 || id > count) {
+        fprintf(stderr, "task with id %d does not exist.\n", id);
+        return -2;
+    }
+
+    struct Task *task = &tasks[id - 1];
+
+    if (!task->isDone) {
+        printf("Task[%d] is already marked undone.\n", id);
+        return 0;
+    }
+
+    task->isDone = 0;
+    printf("Task[%d] is now marked undone.\n", id);
+
     return 0;
 }
