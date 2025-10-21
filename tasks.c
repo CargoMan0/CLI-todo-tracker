@@ -80,30 +80,22 @@ int delete_task(struct Task **tasks, int *count, const int id) {
 }
 
 int get_tasks(struct Task *tasks, const int count) {
-    char *is_done_bool;
+    if (tasks == NULL) {
+        return -1;
+    }
 
     if (count == 0) {
         printf("No tasks found\n");
         return 0;
     }
 
-    printf("=========================\n");
+    printf("\n==== TASK LIST (%d) ====\n", count);
     for (int i = 0; i < count; i++) {
-        if (tasks[i].isDone) {
-            is_done_bool = "true";
-        } else {
-            is_done_bool = "false";
-        }
-
-        printf("Task[%d]\n"
-               "Task Name: %s \n"
-               "Priority: %d\n"
-               "Done: %s\n"
-               "=========================\n"
-               ,
-               i + 1, tasks[i].name, tasks[i].priority, is_done_bool
-        );
+        const char *is_done_bool = tasks[i].isDone ? "true" : "false";
+        printf("[%d] %-12s | Priority: %d | Done: %s\n",
+               i + 1, tasks[i].name, tasks[i].priority, is_done_bool);
     }
+    printf("=========================\n");
 
     return 0;
 }
