@@ -17,7 +17,7 @@ int add_task(struct Task **tasks, int *count) {
     int err_code, priority;
     char name[50];
 
-    struct Task *tmp = realloc(*tasks, sizeof(struct Task) * (*count + 1));
+    struct Task *tmp = realloc(*tasks, sizeof(**tasks) * (*count + 1));
     if (tmp == NULL) {
         fprintf(stderr, "memory reallocation failed.\n");
         return -1;
@@ -50,13 +50,12 @@ int add_task(struct Task **tasks, int *count) {
 }
 
 int delete_task(struct Task **tasks, int *count, const int id) {
-    if (*tasks == NULL) {
-        fprintf(stderr, "Critical bug: Tasks array is NULL\n");
+    if (tasks == NULL || count == NULL) {
         return -1;
     }
 
-    if (id > *count) {
-        fprintf(stderr, "Task with id: %d does not exist\n", id);
+    if (id <= 0 || id > *count) {
+        fprintf(stderr, "task with id %d does not exist\n", id);
         return -2;
     }
 
@@ -64,14 +63,18 @@ int delete_task(struct Task **tasks, int *count, const int id) {
         (*tasks)[i] = (*tasks)[i + 1];
     }
 
-    struct Task *tmp = realloc(*tasks, sizeof(struct Task) * (*count - 1));
+    struct Task *tmp = realloc(*tasks, sizeof(**tasks) * (*count - 1));
     if (tmp == NULL) {
-        fprintf(stderr, "realloc() failed. Tasks is NULL\n");
+        fprintf(stderr, "memory reallocation failed.\n");
         return -1;
     }
-
     *tasks = tmp;
     (*count)--;
+
+    if (*count == 0) {
+        free(*tasks);
+        *tasks = NULL;
+    }
 
     return 0;
 }
